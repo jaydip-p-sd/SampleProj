@@ -26,7 +26,7 @@ public class sample {
 
   @Test
   public void verifyGoogleFinanceStocks() {
-    // 1. Opens a webpage www.google.com/finance on a chrome browser
+    // 1. Opens a webpage www.google.com/finance on a Chrome browser
     driver.get("https://www.google.com/finance");
 
     // 2. Verifies the page is loaded by asserting the page title
@@ -35,15 +35,14 @@ public class sample {
     System.out.println("Page title is: " + pageTitle);
 
     // 3. Retrieves the stock symbols listed under the section “You may be interested in info”
-    // Note: The selector might need to be adjusted if the webpage's structure changes.
-    // I'm using a common class name for the stock widgets and then finding the symbol within them.
-    List<WebElement> stockElements = driver.findElements(By.cssSelector("div.YMlKz.W(100%).uL19hd"));
+    // hardcoded xpath. else would create separate file and store it.
+    List<WebElement> stockElements = driver.findElements(By.xpath("//section[@aria-labelledby='smart-watchlist-title']//div[@id='smart-watchlist-title']/following-sibling::ul//li"));
     List<String> retrievedStockSymbols = new ArrayList<>();
 
     System.out.println("Retrieved the following stock symbols:");
     for (WebElement element : stockElements) {
       try {
-        WebElement symbolElement = element.findElement(By.cssSelector("div.COaKTb"));
+        WebElement symbolElement = element.findElement(By.className("COaKTb"));
         String symbol = symbolElement.getText().trim();
         retrievedStockSymbols.add(symbol);
         System.out.println("- " + symbol);
@@ -53,11 +52,11 @@ public class sample {
       }
     }
 
-    // Convert to sets for easy comparison
+    // Convert to sets for comparison
     Set<String> retrievedSet = retrievedStockSymbols.stream().collect(Collectors.toSet());
     Set<String> expectedSet = expectedStockSymbols.stream().collect(Collectors.toSet());
 
-    // 4. Compare the stock symbols retrieved from (3) with expectedStockSymbols
+
     // 5. Print all stock symbols that are in (3) but not in expectedStockSymbols
     Set<String> onlyInRetrieved = retrievedSet.stream()
         .filter(s -> !expectedSet.contains(s))
@@ -70,7 +69,7 @@ public class sample {
       System.out.println("\nNo stock symbols were found on the page that are not in the expected list.");
     }
 
-    // 6. Print all stock symbols that are in expectedStockSymbols but not in (3)
+    // 6. Print all stock symbols that are in expectedStockSymbols but not in retrieved list
     Set<String> onlyInExpected = expectedSet.stream()
         .filter(s -> !retrievedSet.contains(s))
         .collect(Collectors.toSet());
@@ -82,7 +81,7 @@ public class sample {
       System.out.println("\nNo stock symbols were in the expected list that were not found on the page.");
     }
 
-    // Assert that the sets are equal
+    // 4. Compare the stock symbols in (3) with expectedStockSymbols
     Assert.assertTrue(onlyInExpected.isEmpty() && onlyInRetrieved.isEmpty(), "Stock symbol lists do not match.");
   }
 
