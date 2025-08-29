@@ -39,6 +39,11 @@ public class sample {
     List<WebElement> stockElements = driver.findElements(By.xpath("//section[@aria-labelledby='smart-watchlist-title']//div[@id='smart-watchlist-title']/following-sibling::ul//li"));
     List<String> retrievedStockSymbols = new ArrayList<>();
 
+    // Iterator itr = stockElements.iterator();
+    // while(itr.hasNext()){
+    // WebElement element = (WebElement)itr.next();
+    // continue below for loop
+
     System.out.println("Retrieved the following stock symbols:");
     for (WebElement element : stockElements) {
       try {
